@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Your Stay | Alpine Aura Homestay - Secure Booking</title>
-    <meta name="description" content="Book your stay at Alpine Aura Homestay with our secure AWS-powered booking system. Instant confirmation and best rate guarantee.">
+    <title>Book Your Stay | Alpine Aura Homestay - Secure Mountain Booking</title>
+    <meta name="description" content="Book your mountain retreat at Alpine Aura Homestay. Secure booking with instant confirmation powered by AWS technology.">
     
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,58 +19,103 @@
             padding: 120px 0 60px;
         }
         
-        .booking-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 1px solid #e5e7eb;
-        }
-        
         .step-indicator {
             background: #f8fafc;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
         }
         
         .step {
-            display: flex;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            position: relative;
+            padding: 15px 20px;
+            border-radius: 10px;
             transition: all 0.3s ease;
+            background: white;
+            border: 2px solid #e5e7eb;
         }
         
         .step.active {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white;
+            border-color: #2563eb;
+            transform: scale(1.05);
         }
         
         .step.completed {
-            background: var(--secondary-color);
+            background: linear-gradient(135deg, #059669, #047857);
             color: white;
+            border-color: #059669;
+        }
+        
+        .step i {
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+        
+        .booking-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-bottom: 30px;
         }
         
         .booking-summary {
             background: #f8fafc;
-            border-radius: 15px;
-            padding: 2rem;
+            border-radius: 20px;
+            padding: 30px;
             position: sticky;
             top: 100px;
+        }
+        
+        .form-floating {
+            margin-bottom: 20px;
+        }
+        
+        .form-floating > .form-control,
+        .form-floating > .form-select {
+            height: calc(3.5rem + 2px);
+            padding: 1rem 0.75rem;
+        }
+        
+        .form-floating > label {
+            padding: 1rem 0.75rem;
+        }
+        
+        .price-breakdown {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
         }
         
         .price-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
+            margin-bottom: 10px;
+            padding: 8px 0;
         }
         
-        .total-row {
-            border-top: 2px solid var(--primary-color);
-            padding-top: 1rem;
-            margin-top: 1rem;
-            font-weight: 700;
-            font-size: 1.2rem;
+        .price-row.total {
+            border-top: 2px solid #2563eb;
+            margin-top: 15px;
+            padding-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .room-preview {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .room-preview.selected {
+            border-color: #2563eb;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
         }
     </style>
 </head>
@@ -88,17 +133,22 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="rooms.html">Rooms</a></li>
-                    <li class="nav-item"><a class="nav-link" href="kalimpong.html">Kalimpong</a></li>
-                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="rooms.html">Rooms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="tel:+91XXXXXXXXXX">
-                            <i class="fas fa-phone"></i> Call Us
-                        </a>
+                        <span class="nav-link">
+                            <i class="fas fa-shield-alt text-success me-1"></i>
+                            Secure Booking
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -110,8 +160,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 mx-auto text-center">
-                    <h1 class="hero-title">Book Your Mountain Retreat</h1>
-                    <p class="hero-subtitle">Secure your stay with instant confirmation and best rate guarantee</p>
+                    <h1 class="display-5 fw-bold mb-4">Book Your Mountain Retreat</h1>
+                    <p class="lead mb-4">
+                        Secure your stay with instant confirmation and best rate guarantee
+                    </p>
                     <div class="hero-badge">
                         <i class="fab fa-aws"></i>
                         <span>Powered by AWS DynamoDB</span>
@@ -122,27 +174,27 @@
     </section>
 
     <!-- Booking Content -->
-    <section class="booking-content py-5">
+    <section class="py-5">
         <div class="container">
             <!-- Step Indicator -->
             <div class="step-indicator">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 mb-3 mb-md-0">
                         <div class="step active" id="step1">
-                            <i class="fas fa-calendar-check me-2"></i>
-                            <span>1. Select Dates & Room</span>
+                            <i class="fas fa-calendar-check"></i>
+                            <span class="fw-semibold">1. Select Dates & Room</span>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 mb-3 mb-md-0">
                         <div class="step" id="step2">
-                            <i class="fas fa-user-edit me-2"></i>
-                            <span>2. Guest Details</span>
+                            <i class="fas fa-user-edit"></i>
+                            <span class="fw-semibold">2. Guest Details</span>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="step" id="step3">
-                            <i class="fas fa-check-circle me-2"></i>
-                            <span>3. Confirmation</span>
+                            <i class="fas fa-check-circle"></i>
+                            <span class="fw-semibold">3. Confirmation</span>
                         </div>
                     </div>
                 </div>
@@ -151,9 +203,9 @@
             <div class="row">
                 <!-- Booking Form -->
                 <div class="col-lg-8">
-                    <div class="booking-card p-4">
-                        <!-- Step 1: Date & Room Selection -->
-                        <div id="bookingStep1" class="booking-step">
+                    <!-- Step 1: Date & Room Selection -->
+                    <div id="bookingStep1" class="booking-step">
+                        <div class="booking-card">
                             <h3 class="mb-4">
                                 <i class="fas fa-calendar-alt text-primary me-2"></i>
                                 Select Your Stay Details
@@ -162,149 +214,176 @@
                             <form id="dateSelectionForm">
                                 <div class="row mb-4">
                                     <div class="col-md-6">
-                                        <label class="form-label">
-                                            <i class="fas fa-calendar-alt text-primary me-1"></i>
-                                            Check-in Date
-                                        </label>
-                                        <input type="date" class="form-control" id="bookingCheckin" required>
+                                        <div class="form-floating">
+                                            <input type="date" class="form-control" id="bookingCheckin" required>
+                                            <label for="bookingCheckin">
+                                                <i class="fas fa-calendar-alt text-primary me-1"></i>
+                                                Check-in Date
+                                            </label>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">
-                                            <i class="fas fa-calendar-alt text-primary me-1"></i>
-                                            Check-out Date
-                                        </label>
-                                        <input type="date" class="form-control" id="bookingCheckout" required>
+                                        <div class="form-floating">
+                                            <input type="date" class="form-control" id="bookingCheckout" required>
+                                            <label for="bookingCheckout">
+                                                <i class="fas fa-calendar-alt text-primary me-1"></i>
+                                                Check-out Date
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 
                                 <div class="row mb-4">
                                     <div class="col-md-6">
-                                        <label class="form-label">
-                                            <i class="fas fa-user text-primary me-1"></i>
-                                            Adults
-                                        </label>
-                                        <select class="form-select" id="bookingAdults" required>
-                                            <option value="1">1 Adult</option>
-                                            <option value="2" selected>2 Adults</option>
-                                            <option value="3">3 Adults</option>
-                                            <option value="4">4 Adults</option>
-                                            <option value="5">5 Adults</option>
-                                            <option value="6">6 Adults</option>
-                                        </select>
+                                        <div class="form-floating">
+                                            <select class="form-select" id="bookingAdults" required>
+                                                <option value="1">1 Adult</option>
+                                                <option value="2" selected>2 Adults</option>
+                                                <option value="3">3 Adults</option>
+                                                <option value="4">4 Adults</option>
+                                                <option value="5">5 Adults</option>
+                                                <option value="6">6 Adults</option>
+                                            </select>
+                                            <label for="bookingAdults">
+                                                <i class="fas fa-user text-primary me-1"></i>
+                                                Adults
+                                            </label>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">
-                                            <i class="fas fa-child text-primary me-1"></i>
-                                            Children
-                                        </label>
-                                        <select class="form-select" id="bookingChildren">
-                                            <option value="0" selected>0 Children</option>
-                                            <option value="1">1 Child</option>
-                                            <option value="2">2 Children</option>
-                                            <option value="3">3 Children</option>
-                                            <option value="4">4 Children</option>
-                                        </select>
+                                        <div class="form-floating">
+                                            <select class="form-select" id="bookingChildren">
+                                                <option value="0" selected>0 Children</option>
+                                                <option value="1">1 Child</option>
+                                                <option value="2">2 Children</option>
+                                                <option value="3">3 Children</option>
+                                                <option value="4">4 Children</option>
+                                            </select>
+                                            <label for="bookingChildren">
+                                                <i class="fas fa-child text-primary me-1"></i>
+                                                Children
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-search me-2"></i>
-                                    Search Available Rooms
-                                </button>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                                        <i class="fas fa-search me-2"></i>
+                                        Search Available Rooms
+                                    </button>
+                                </div>
                             </form>
                             
                             <!-- Available Rooms -->
-                            <div id="availableRooms" class="mt-4 d-none">
-                                <h4>Available Rooms</h4>
-                                <div id="roomsList"></div>
+                            <div id="availableRooms" class="mt-5" style="display: none;">
+                                <h4 class="mb-4">Available Rooms</h4>
+                                <div id="roomsList">
+                                    <!-- Rooms will be loaded here -->
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Step 2: Guest Details -->
-                        <div id="bookingStep2" class="booking-step d-none">
+                    <!-- Step 2: Guest Details -->
+                    <div id="bookingStep2" class="booking-step" style="display: none;">
+                        <div class="booking-card">
                             <h3 class="mb-4">
                                 <i class="fas fa-user-edit text-primary me-2"></i>
                                 Guest Information
                             </h3>
                             
                             <form id="guestDetailsForm">
-                                <div class="row mb-3">
+                                <div class="row">
                                     <div class="col-md-6">
-                                        <label class="form-label">
-                                            <i class="fas fa-user text-primary me-1"></i>
-                                            Full Name *
-                                        </label>
-                                        <input type="text" class="form-control" id="guestName" required>
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="guestName" required>
+                                            <label for="guestName">
+                                                <i class="fas fa-user text-primary me-1"></i>
+                                                Full Name *
+                                            </label>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">
-                                            <i class="fas fa-envelope text-primary me-1"></i>
-                                            Email Address *
-                                        </label>
-                                        <input type="email" class="form-control" id="guestEmail" required>
-                                    </div>
-                                </div>
-                                
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">
-                                            <i class="fas fa-phone text-primary me-1"></i>
-                                            Phone Number *
-                                        </label>
-                                        <input type="tel" class="form-control" id="guestPhone" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">
-                                            <i class="fas fa-id-card text-primary me-1"></i>
-                                            ID Proof Type
-                                        </label>
-                                        <select class="form-select" id="idProofType">
-                                            <option value="aadhar">Aadhar Card</option>
-                                            <option value="passport">Passport</option>
-                                            <option value="driving">Driving License</option>
-                                            <option value="voter">Voter ID</option>
-                                        </select>
+                                        <div class="form-floating">
+                                            <input type="email" class="form-control" id="guestEmail" required>
+                                            <label for="guestEmail">
+                                                <i class="fas fa-envelope text-primary me-1"></i>
+                                                Email Address *
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="mb-3">
-                                    <label class="form-label">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="tel" class="form-control" id="guestPhone" required>
+                                            <label for="guestPhone">
+                                                <i class="fas fa-phone text-primary me-1"></i>
+                                                Phone Number *
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <select class="form-select" id="idProofType">
+                                                <option value="aadhar">Aadhar Card</option>
+                                                <option value="passport">Passport</option>
+                                                <option value="driving">Driving License</option>
+                                                <option value="voter">Voter ID</option>
+                                            </select>
+                                            <label for="idProofType">
+                                                <i class="fas fa-id-card text-primary me-1"></i>
+                                                ID Proof Type
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="guestAddress" style="height: 100px"></textarea>
+                                    <label for="guestAddress">
                                         <i class="fas fa-map-marker-alt text-primary me-1"></i>
                                         Address
                                     </label>
-                                    <textarea class="form-control" id="guestAddress" rows="2"></textarea>
                                 </div>
                                 
-                                <div class="mb-4">
-                                    <label class="form-label">
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="specialRequests" style="height: 120px" placeholder="Any special requests..."></textarea>
+                                    <label for="specialRequests">
                                         <i class="fas fa-comment text-primary me-1"></i>
                                         Special Requests
                                     </label>
-                                    <textarea class="form-control" id="specialRequests" rows="3" 
-                                              placeholder="Any special requests or preferences..."></textarea>
                                 </div>
                                 
-                                <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="goToStep(1)">
-                                        <i class="fas fa-arrow-left me-2"></i>
-                                        Back
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                    <label class="form-check-label" for="agreeTerms">
+                                        I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a> 
+                                        and <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a>
+                                    </label>
+                                </div>
+                                
+                                <div class="d-flex gap-3">
+                                    <button type="button" class="btn btn-outline-secondary px-4" onclick="goToStep(1)">
+                                        <i class="fas fa-arrow-left me-2"></i>Back
                                     </button>
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary px-4 flex-fill">
                                         <i class="fas fa-arrow-right me-2"></i>
                                         Continue to Confirmation
                                     </button>
                                 </div>
                             </form>
                         </div>
+                    </div>
 
-                        <!-- Step 3: Confirmation -->
-                        <div id="bookingStep3" class="booking-step d-none">
-                            <h3 class="mb-4">
-                                <i class="fas fa-check-circle text-success me-2"></i>
-                                Booking Confirmation
-                            </h3>
-                            
-                            <div id="bookingConfirmation"></div>
+                    <!-- Step 3: Confirmation -->
+                    <div id="bookingStep3" class="booking-step" style="display: none;">
+                        <div class="booking-card">
+                            <div id="bookingConfirmation">
+                                <!-- Confirmation content will be loaded here -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -312,34 +391,34 @@
                 <!-- Booking Summary -->
                 <div class="col-lg-4">
                     <div class="booking-summary">
-                        <h4 class="mb-3">
+                        <h4 class="mb-4">
                             <i class="fas fa-file-invoice text-primary me-2"></i>
                             Booking Summary
                         </h4>
                         
                         <div id="summaryContent">
-                            <div class="text-center text-muted py-4">
+                            <div class="text-center text-muted py-5">
                                 <i class="fas fa-calendar-plus fa-3x mb-3"></i>
                                 <p>Select your dates and room to see pricing details</p>
                             </div>
                         </div>
                         
-                        <div class="mt-4">
+                        <div class="mt-4 pt-4 border-top">
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <i class="fas fa-shield-alt text-success"></i>
-                                <small>Secure Booking</small>
+                                <small class="text-muted">Secure AWS-powered booking</small>
                             </div>
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <i class="fas fa-check-circle text-success"></i>
-                                <small>Instant Confirmation</small>
+                                <small class="text-muted">Instant confirmation</small>
                             </div>
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <i class="fas fa-tag text-success"></i>
-                                <small>Best Price Guarantee</small>
+                                <small class="text-muted">Best price guarantee</small>
                             </div>
                             <div class="d-flex align-items-center gap-2">
-                                <i class="fab fa-aws text-warning"></i>
-                                <small>AWS Powered</small>
+                                <i class="fas fa-times-circle text-warning"></i>
+                                <small class="text-muted">Free cancellation up to 24 hours</small>
                             </div>
                         </div>
                     </div>
@@ -347,6 +426,39 @@
             </div>
         </div>
     </section>
+
+    <!-- Terms Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Terms and Conditions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Booking Terms</h6>
+                    <ul>
+                        <li>Check-in time: 2:00 PM</li>
+                        <li>Check-out time: 11:00 AM</li>
+                        <li>Cancellation: Free up to 24 hours before check-in</li>
+                        <li>Payment: Due at the time of booking or at property</li>
+                        <li>Valid ID proof required at check-in</li>
+                    </ul>
+                    <h6>House Rules</h6>
+                    <ul>
+                        <li>No smoking inside the premises</li>
+                        <li>Pets allowed with prior approval</li>
+                        <li>Quiet hours: 10:00 PM - 7:00 AM</li>
+                        <li>Maximum occupancy as per room capacity</li>
+                        <li>Respect for local culture and environment</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer bg-dark text-light py-5">
@@ -358,54 +470,48 @@
                             <i class="fas fa-mountain me-2"></i>
                             Alpine Aura Homestay
                         </h5>
-                        <p>Experience authentic Himalayan hospitality in the heart of beautiful Kalimpong.</p>
+                        <p>Experience authentic Himalayan hospitality with modern booking convenience.</p>
                     </div>
                 </div>
-                <div class="col-lg-4 mb-4">
-                    <h6>Contact Information</h6>
-                    <div class="contact-info">
-                        <div class="contact-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Kalimpong, West Bengal, India</span>
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6>Booking Support</h6>
+                            <ul class="footer-links">
+                                <li><a href="tel:+91XXXXXXXXXX">Phone Support</a></li>
+                                <li><a href="mailto:info@alpineaura.com">Email Support</a></li>
+                                <li><a href="#">FAQ</a></li>
+                            </ul>
                         </div>
-                        <div class="contact-item">
-                            <i class="fas fa-phone"></i>
-                            <span>+91-XXXXX-XXXXX</span>
+                        <div class="col-md-4">
+                            <h6>Quick Links</h6>
+                            <ul class="footer-links">
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="rooms.html">Rooms</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
                         </div>
-                        <div class="contact-item">
-                            <i class="fas fa-envelope"></i>
-                            <span>info@alpineaura.com</span>
+                        <div class="col-md-4">
+                            <h6>Secure Booking</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-primary">
+                                    <i class="fab fa-aws me-1"></i>AWS Powered
+                                </span>
+                                <span class="badge bg-success">
+                                    <i class="fas fa-shield-alt me-1"></i>SSL Secure
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <h6>Secure Booking</h6>
-                    <p>Your booking is secured with AWS encryption and processed through our secure payment gateway.</p>
-                    <div class="tech-badges">
-                        <span class="tech-badge">
-                            <i class="fab fa-aws"></i> AWS Secured
-                        </span>
-                        <span class="tech-badge">
-                            <i class="fas fa-lock"></i> SSL Encrypted
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="mb-0">&copy; 2024 Alpine Aura Homestay. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <div class="footer-links-inline">
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Service</a>
-                        <a href="#">Refund Policy</a>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
+
+    <!-- Back to Top -->
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
