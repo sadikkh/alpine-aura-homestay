@@ -1,6 +1,6 @@
 /**
  * Alpine Aura Homestay - Booking Page JavaScript
- * Handles multi-step booking form, validation, and AWS integration
+ * Handles multi-step booking form with AWS integration
  */
 
 // ===== GLOBAL VARIABLES =====
@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     initializeBookingPage();
     setupEventListeners();
-    loadRoomsForSelection();
     
     // Check for URL parameters
     checkBookingParameters();
@@ -23,13 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ===== INITIALIZATION =====
 function initializeBookingPage() {
-    // Set minimum dates
     setMinimumBookingDates();
-    
-    // Initialize form validation
-    setupFormValidation();
-    
-    // Show initial step
     showStep(1);
 }
 
@@ -121,6 +114,14 @@ function checkBookingParameters() {
         }, 1000);
     }
     
+    // Pre-select room if specified
+    if (urlParams.has('room')) {
+        const roomId = urlParams.get('room');
+        setTimeout(() => {
+            selectRoomById(roomId);
+        }, 2000);
+    }
+    
     updateBookingSummary();
 }
 
@@ -134,7 +135,7 @@ function showStep(stepNumber) {
         const stepIndicator = document.getElementById(`step${i}`);
         
         if (step) {
-            step.classList.add('d-none');
+            step.style.display = i === stepNumber ? 'block' : 'none';
         }
         
         if (stepIndicator) {
@@ -146,69 +147,10 @@ function showStep(stepNumber) {
             }
         }
     }
-    
-    // Show current step
-    const currentStepElement = document.getElementById(`bookingStep${stepNumber}`);
-    if (currentStepElement) {
-        currentStepElement.classList.remove('d-none');
-    }
 }
 
 function goToStep(stepNumber) {
     showStep(stepNumber);
-}
-
-// ===== ROOM LOADING =====
-function loadRoomsForSelection() {
-    console.log('🏠 Loading rooms for selection...');
-    
-    fetch(`${API_BASE_URL}?action=get_rooms`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.rooms) {
-                availableRooms = data.rooms;
-                console.log(`✅ Loaded ${data.rooms.length} rooms for booking`);
-            } else {
-                console.log('ℹ️ Using mock rooms data');
-                availableRooms = getMockRoomsData();
-            }
-        })
-        .catch(error => {
-            console.error('❌ Error loading rooms:', error);
-            availableRooms = getMockRoomsData();
-        });
-}
-
-function getMockRoomsData() {
-    return [
-        {
-            room_id: 'room-001',
-            name: 'Mountain View Deluxe',
-            description: 'Wake up to breathtaking Himalayan views from your private balcony.',
-            price: 2500,
-            capacity: 3,
-            amenities: ['Mountain View', 'AC', 'WiFi', 'Private Bathroom', 'Balcony'],
-            images: ['https://images.unsplash.com/photo-1586105251261-72a756497a11?w=600&h=400&fit=crop&q=80']
-        },
-        {
-            room_id: 'room-002',
-            name: 'Cozy Garden Room',
-            description: 'Peaceful garden views with modern amenities.',
-            price: 2000,
-            capacity: 2,
-            amenities: ['Garden View', 'WiFi', 'Private Bathroom', 'Work Desk'],
-            images: ['https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop&q=80']
-        },
-        {
-            room_id: 'room-003',
-            name: 'Family Suite',
-            description: 'Spacious suite perfect for families with separate living area.',
-            price: 3500,
-            capacity: 6,
-            amenities: ['Mountain View', 'Living Area', 'Kitchenette', 'WiFi', '2 Bathrooms'],
-            images: ['https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop&q=80']
-        }
-    ];
 }
 
 // ===== DATE & ROOM SELECTION =====
@@ -222,15 +164,11 @@ function handleDateSelection(event) {
         children: parseInt(document.getElementById('bookingChildren').value)
     };
     
-    // Validate dates
     if (!validateDates(formData)) {
         return;
     }
     
-    // Store booking data
     bookingData = { ...formData };
-    
-    // Search for available rooms
     searchAvailableRooms();
 }
 
@@ -262,72 +200,88 @@ function searchAvailableRooms() {
     // Show loading
     roomsList.innerHTML = `
         <div class="text-center py-4">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Searching...</span>
-            </div>
-            <p class="mt-2">Searching available rooms...</p>
+            <div class="spinner-border text-primary mb-3"></div>
+            <h5>Searching Available Rooms...</h5>
+            <p class="text-muted">Checking availability in AWS DynamoDB...</p>
         </div>
     `;
     
-    availableRoomsDiv.classList.remove('d-none');
+    availableRoomsDiv.style.display = 'block';
     
-    // Simulate API call or use real one
-    setTimeout(() => {
-        displayAvailableRooms();
-    }, 1500);
+    const params = new URLSearchParams({
+        action: 'check_availability',
+        checkin: bookingData.checkin,
+        checkout: bookingData.checkout,
+        adults: bookingData.adults,
+        children: bookingData.children
+    });
+    
+    fetch(`${API_BASE_URL}?${params}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.rooms) {
+                availableRooms = data.rooms;
+                displayAvailableRooms(data.rooms);
+                console.log(`✅ Found ${data.rooms.length} available rooms`);
+            } else {
+                throw new Error(data.error || 'No rooms available');
+            }
+        })
+        .catch(error => {
+            console.error('❌ Room search failed:', error);
+            showRoomSearchError();
+        });
 }
 
-function displayAvailableRooms() {
+function displayAvailableRooms(rooms) {
     const roomsList = document.getElementById('roomsList');
     if (!roomsList) return;
     
-    const totalGuests = bookingData.adults + bookingData.children;
-    const availableForGuests = availableRooms.filter(room => room.capacity >= totalGuests);
-    
-    if (availableForGuests.length === 0) {
+    if (!rooms || rooms.length === 0) {
         roomsList.innerHTML = `
-            <div class="alert alert-warning">
+            <div class="alert alert-warning text-center">
                 <h5><i class="fas fa-exclamation-triangle"></i> No Rooms Available</h5>
-                <p>No rooms can accommodate ${totalGuests} guests for the selected dates. Please adjust your requirements.</p>
+                <p>No rooms can accommodate your requirements for the selected dates. Please try different dates or adjust guest count.</p>
+                <button class="btn btn-primary" onclick="goToStep(1)">
+                    <i class="fas fa-arrow-left me-2"></i>Change Dates
+                </button>
             </div>
         `;
         return;
     }
     
+    const nights = calculateNights(bookingData.checkin, bookingData.checkout);
     let html = '<div class="row">';
     
-    availableForGuests.forEach(room => {
-        const nights = calculateNights(bookingData.checkin, bookingData.checkout);
-        const totalPrice = room.price * nights;
+    rooms.forEach(room => {
+        const totalPrice = room.total_amount || (room.price * nights * 1.12);
         
         html += `
-            <div class="col-md-6 mb-3">
-                <div class="card room-option">
-                    <img src="${room.images[0]}" class="card-img-top" alt="${room.name}" style="height: 200px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title">${room.name}</h5>
-                        <p class="card-text">${room.description}</p>
-                        <div class="room-details mb-3">
-                            <small class="text-muted">
-                                <i class="fas fa-users"></i> Up to ${room.capacity} guests |
-                                <i class="fas fa-moon"></i> ${nights} nights |
-                                <i class="fas fa-rupee-sign"></i> ${formatNumber(room.price)}/night
-                            </small>
+            <div class="col-md-6 mb-4">
+                <div class="room-preview" id="room-${room.room_id}">
+                    <div class="row align-items-center">
+                        <div class="col-4">
+                            <img src="${room.images && room.images[0] ? room.images[0] : 'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=300&h=200&fit=crop&q=80'}" 
+                                 alt="${room.name}" class="img-fluid rounded">
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong class="text-primary">₹${formatNumber(totalPrice)}</strong>
-                                <small class="text-muted d-block">Total for ${nights} nights</small>
+                        <div class="col-8">
+                            <h5 class="mb-2">${room.name}</h5>
+                            <p class="text-muted small mb-2">${room.description.substring(0, 80)}...</p>
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-users me-1"></i>Up to ${room.capacity} guests |
+                                    <i class="fas fa-moon me-1"></i>${nights} nights
+                                </small>
                             </div>
-                            <button class="btn btn-primary" onclick="selectRoom('${room.room_id}')">
-                                Select Room
-                            </button>
-                        </div>
-                        <div class="mt-2">
-                            <small class="text-muted">
-                                ${room.amenities.slice(0, 3).join(' • ')}
-                                ${room.amenities.length > 3 ? ` • +${room.amenities.length - 3} more` : ''}
-                            </small>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="text-primary">₹${formatNumber(Math.round(totalPrice))}</strong>
+                                    <small class="text-muted d-block">Total (incl. taxes)</small>
+                                </div>
+                                <button class="btn btn-primary btn-sm" onclick="selectRoom('${room.room_id}')">
+                                    Select Room
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -343,9 +297,45 @@ function selectRoom(roomId) {
     selectedRoom = availableRooms.find(room => room.room_id === roomId);
     if (selectedRoom) {
         bookingData.room = selectedRoom;
+        
+        // Update room selection UI
+        document.querySelectorAll('.room-preview').forEach(el => {
+            el.classList.remove('selected');
+        });
+        document.getElementById(`room-${roomId}`).classList.add('selected');
+        
         updateBookingSummary();
         showStep(2);
         showNotification(`${selectedRoom.name} selected successfully!`, 'success');
+    }
+}
+
+function selectRoomById(roomId) {
+    // This function is called when room is pre-selected from URL
+    if (availableRooms.length === 0) {
+        // Rooms not loaded yet, try again later
+        setTimeout(() => selectRoomById(roomId), 1000);
+        return;
+    }
+    
+    const room = availableRooms.find(r => r.room_id === roomId);
+    if (room) {
+        selectRoom(roomId);
+    }
+}
+
+function showRoomSearchError() {
+    const roomsList = document.getElementById('roomsList');
+    if (roomsList) {
+        roomsList.innerHTML = `
+            <div class="alert alert-danger text-center">
+                <h5><i class="fas fa-exclamation-triangle"></i> Search Failed</h5>
+                <p>Unable to search for available rooms. Please check your connection and try again.</p>
+                <button class="btn btn-primary" onclick="searchAvailableRooms()">
+                    <i class="fas fa-refresh me-2"></i>Try Again
+                </button>
+            </div>
+        `;
     }
 }
 
@@ -362,15 +352,11 @@ function handleGuestDetails(event) {
         specialRequests: document.getElementById('specialRequests').value.trim()
     };
     
-    // Validate guest details
     if (!validateGuestDetails(guestData)) {
         return;
     }
     
-    // Store guest data
     bookingData = { ...bookingData, ...guestData };
-    
-    // Process booking
     processBooking();
 }
 
@@ -393,6 +379,14 @@ function validateGuestDetails(guestData) {
         return false;
     }
     
+    // Check terms agreement
+    const agreeTerms = document.getElementById('agreeTerms');
+    if (!agreeTerms.checked) {
+        showNotification('Please agree to the terms and conditions', 'error');
+        agreeTerms.focus();
+        return false;
+    }
+    
     return true;
 }
 
@@ -404,29 +398,9 @@ function isValidEmail(email) {
 // ===== BOOKING PROCESSING =====
 function processBooking() {
     showStep(3);
-    showBookingConfirmation();
+    showBookingProcessing();
     
-    // Simulate booking submission
-    setTimeout(() => {
-        submitBookingToServer();
-    }, 2000);
-}
-
-function showBookingConfirmation() {
-    const confirmationDiv = document.getElementById('bookingConfirmation');
-    if (!confirmationDiv) return;
-    
-    confirmationDiv.innerHTML = `
-        <div class="text-center mb-4">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Processing...</span>
-            </div>
-            <p class="mt-2">Processing your booking...</p>
-        </div>
-    `;
-}
-
-function submitBookingToServer() {
+    // Prepare booking data for submission
     const bookingPayload = {
         room_id: bookingData.room.room_id,
         checkin_date: bookingData.checkin,
@@ -462,56 +436,100 @@ function submitBookingToServer() {
     });
 }
 
+function showBookingProcessing() {
+    const confirmationDiv = document.getElementById('bookingConfirmation');
+    if (!confirmationDiv) return;
+    
+    confirmationDiv.innerHTML = `
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary mb-4" style="width: 3rem; height: 3rem;"></div>
+            <h3>Processing Your Booking...</h3>
+            <p class="text-muted">Please wait while we secure your reservation</p>
+            <div class="progress mt-4" style="height: 8px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                     style="width: 100%; background: linear-gradient(90deg, #2563eb, #1d4ed8);"></div>
+            </div>
+        </div>
+    `;
+}
+
 function showBookingSuccess(data) {
     const confirmationDiv = document.getElementById('bookingConfirmation');
     if (!confirmationDiv) return;
     
     const bookingId = data.booking_id || generateMockBookingId();
     const totalAmount = data.total_amount || calculateTotalAmount();
+    const nights = calculateNights(bookingData.checkin, bookingData.checkout);
     
     confirmationDiv.innerHTML = `
-        <div class="alert alert-success">
-            <div class="text-center">
-                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
-                <h3>Booking Confirmed!</h3>
-                <p class="lead">Your reservation has been successfully created.</p>
+        <div class="text-center mb-4">
+            <div class="success-animation mb-4">
+                <i class="fas fa-check-circle fa-5x text-success"></i>
             </div>
+            <h2 class="text-success mb-3">Booking Confirmed!</h2>
+            <p class="lead">Your mountain retreat has been successfully reserved.</p>
         </div>
         
-        <div class="booking-details">
-            <h4>Booking Details</h4>
+        <div class="booking-details-card bg-light rounded-3 p-4 mb-4">
+            <h4 class="text-center mb-4">Booking Details</h4>
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>Booking ID:</strong> ${bookingId}</p>
-                    <p><strong>Guest Name:</strong> ${bookingData.guestName}</p>
-                    <p><strong>Email:</strong> ${bookingData.guestEmail}</p>
-                    <p><strong>Phone:</strong> ${bookingData.guestPhone}</p>
+                    <div class="detail-group mb-3">
+                        <strong>Booking ID:</strong><br>
+                        <span class="text-primary fs-5">${bookingId}</span>
+                    </div>
+                    <div class="detail-group mb-3">
+                        <strong>Guest Name:</strong><br>
+                        ${bookingData.guestName}
+                    </div>
+                    <div class="detail-group mb-3">
+                        <strong>Email:</strong><br>
+                        ${bookingData.guestEmail}
+                    </div>
+                    <div class="detail-group mb-3">
+                        <strong>Phone:</strong><br>
+                        ${bookingData.guestPhone}
+                    </div>
                 </div>
                 <div class="col-md-6">
-                    <p><strong>Room:</strong> ${bookingData.room.name}</p>
-                    <p><strong>Check-in:</strong> ${formatDate(bookingData.checkin)}</p>
-                    <p><strong>Check-out:</strong> ${formatDate(bookingData.checkout)}</p>
-                    <p><strong>Total Amount:</strong> <span class="text-primary">₹${formatNumber(totalAmount)}</span></p>
+                    <div class="detail-group mb-3">
+                        <strong>Room:</strong><br>
+                        ${bookingData.room.name}
+                    </div>
+                    <div class="detail-group mb-3">
+                        <strong>Check-in:</strong><br>
+                        ${formatDate(bookingData.checkin)} at 2:00 PM
+                    </div>
+                    <div class="detail-group mb-3">
+                        <strong>Check-out:</strong><br>
+                        ${formatDate(bookingData.checkout)} at 11:00 AM
+                    </div>
+                    <div class="detail-group mb-3">
+                        <strong>Total Amount:</strong><br>
+                        <span class="text-primary fs-4 fw-bold">₹${formatNumber(totalAmount)}</span>
+                        <small class="text-muted d-block">${nights} nights (including taxes)</small>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="alert alert-info">
+        <div class="alert alert-info border-0">
             <h6><i class="fas fa-info-circle"></i> What's Next?</h6>
             <ul class="mb-0">
-                <li>A confirmation email has been sent to ${bookingData.guestEmail}</li>
-                <li>Please arrive at the check-in time: 2:00 PM</li>
+                <li>A confirmation email has been sent to <strong>${bookingData.guestEmail}</strong></li>
+                <li>Please arrive at check-in time: <strong>2:00 PM</strong></li>
+                <li>Bring a valid ID proof for verification</li>
                 <li>Payment can be made at the property</li>
-                <li>For any queries, call us at +91-XXXXX-XXXXX</li>
+                <li>For any queries, contact us: <strong>+91-XXXXX-XXXXX</strong></li>
             </ul>
         </div>
         
         <div class="text-center mt-4">
-            <button class="btn btn-primary me-2" onclick="printBooking('${bookingId}')">
-                <i class="fas fa-print"></i> Print Confirmation
+            <button class="btn btn-outline-primary me-3" onclick="printBooking('${bookingId}')">
+                <i class="fas fa-print me-2"></i>Print Confirmation
             </button>
-            <a href="index.html" class="btn btn-outline-primary">
-                <i class="fas fa-home"></i> Back to Home
+            <a href="index.html" class="btn btn-primary">
+                <i class="fas fa-home me-2"></i>Back to Home
             </a>
         </div>
     `;
@@ -524,21 +542,31 @@ function showBookingError() {
     if (!confirmationDiv) return;
     
     confirmationDiv.innerHTML = `
-        <div class="alert alert-danger">
-            <div class="text-center">
-                <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
-                <h3>Booking Failed</h3>
-                <p>We're sorry, but there was an error processing your booking. Please try again or contact us directly.</p>
+        <div class="text-center py-5">
+            <div class="error-animation mb-4">
+                <i class="fas fa-exclamation-triangle fa-5x text-danger"></i>
             </div>
-        </div>
-        
-        <div class="text-center mt-4">
-            <button class="btn btn-primary me-2" onclick="goToStep(2)">
-                <i class="fas fa-arrow-left"></i> Try Again
-            </button>
-            <a href="contact.html" class="btn btn-outline-primary">
-                <i class="fas fa-phone"></i> Contact Support
-            </a>
+            <h3 class="text-danger mb-3">Booking Failed</h3>
+            <p class="lead mb-4">We're sorry, but there was an error processing your booking.</p>
+            
+            <div class="alert alert-warning">
+                <h6>What you can do:</h6>
+                <ul class="mb-0 text-start">
+                    <li>Check your internet connection</li>
+                    <li>Try booking again with different dates</li>
+                    <li>Contact our support team for assistance</li>
+                    <li>Call us directly for immediate booking</li>
+                </ul>
+            </div>
+            
+            <div class="mt-4">
+                <button class="btn btn-primary me-3" onclick="goToStep(2)">
+                    <i class="fas fa-arrow-left me-2"></i>Try Again
+                </button>
+                <a href="contact.html" class="btn btn-outline-primary">
+                    <i class="fas fa-phone me-2"></i>Contact Support
+                </a>
+            </div>
         </div>
     `;
     
@@ -546,7 +574,6 @@ function showBookingError() {
 }
 
 // ===== BOOKING SUMMARY =====
-
 function updateBookingSummary() {
     const summaryContent = document.getElementById('summaryContent');
     if (!summaryContent) return;
@@ -558,7 +585,7 @@ function updateBookingSummary() {
     
     if (!checkin || !checkout) {
         summaryContent.innerHTML = `
-            <div class="text-center text-muted py-4">
+            <div class="text-center text-muted py-5">
                 <i class="fas fa-calendar-plus fa-3x mb-3"></i>
                 <p>Select your dates and room to see pricing details</p>
             </div>
@@ -570,23 +597,28 @@ function updateBookingSummary() {
     const totalGuests = adults + children;
     
     let summaryHTML = `
-        <div class="booking-info">
-            <h5><i class="fas fa-calendar-alt"></i> Stay Details</h5>
-            <div class="info-row">
-                <span><i class="fas fa-calendar"></i> Check-in:</span>
-                <span>${formatDate(checkin)}</span>
-            </div>
-            <div class="info-row">
-                <span><i class="fas fa-calendar"></i> Check-out:</span>
-                <span>${formatDate(checkout)}</span>
-            </div>
-            <div class="info-row">
-                <span><i class="fas fa-moon"></i> Nights:</span>
-                <span>${nights}</span>
-            </div>
-            <div class="info-row">
-                <span><i class="fas fa-users"></i> Guests:</span>
-                <span>${totalGuests} (${adults} adults, ${children} children)</span>
+        <div class="stay-details mb-4">
+            <h5 class="mb-3">
+                <i class="fas fa-calendar-alt text-primary me-2"></i>
+                Stay Details
+            </h5>
+            <div class="details-grid">
+                <div class="detail-row d-flex justify-content-between py-2 border-bottom">
+                    <span><i class="fas fa-calendar me-2 text-muted"></i>Check-in:</span>
+                    <span class="fw-semibold">${formatDate(checkin)}</span>
+                </div>
+                <div class="detail-row d-flex justify-content-between py-2 border-bottom">
+                    <span><i class="fas fa-calendar me-2 text-muted"></i>Check-out:</span>
+                    <span class="fw-semibold">${formatDate(checkout)}</span>
+                </div>
+                <div class="detail-row d-flex justify-content-between py-2 border-bottom">
+                    <span><i class="fas fa-moon me-2 text-muted"></i>Nights:</span>
+                    <span class="fw-semibold">${nights}</span>
+                </div>
+                <div class="detail-row d-flex justify-content-between py-2">
+                    <span><i class="fas fa-users me-2 text-muted"></i>Guests:</span>
+                    <span class="fw-semibold">${totalGuests} (${adults} adults, ${children} children)</span>
+                </div>
             </div>
         </div>
     `;
@@ -595,30 +627,49 @@ function updateBookingSummary() {
         const subtotal = selectedRoom.price * nights;
         const tax = Math.round(subtotal * 0.12);
         const total = subtotal + tax;
+        
         summaryHTML += `
-            <hr class="my-3">
-            <div class="room-info">
-                <h5><i class="fas fa-bed"></i> Selected Room</h5>
-                <div class="room-summary">
-                    <h6>${selectedRoom.name}</h6>
-                    <p class="text-muted small">${selectedRoom.description}</p>
+            <div class="room-details mb-4">
+                <h5 class="mb-3">
+                    <i class="fas fa-bed text-primary me-2"></i>
+                    Selected Room
+                </h5>
+                <div class="room-card bg-white rounded-3 p-3 border">
+                    <h6 class="mb-2">${selectedRoom.name}</h6>
+                    <p class="text-muted small mb-2">${selectedRoom.description.substring(0, 100)}...</p>
+                    <div class="amenities">
+                        ${selectedRoom.amenities ? selectedRoom.amenities.slice(0, 3).map(amenity => 
+                            `<span class="badge bg-light text-dark me-1">${amenity}</span>`
+                        ).join('') : ''}
+                    </div>
                 </div>
             </div>
             
-            <hr class="my-3">
-            <div class="pricing-info">
-                <h5><i class="fas fa-rupee-sign"></i> Price Breakdown</h5>
-                <div class="price-row">
-                    <span>₹${formatNumber(selectedRoom.price)} × ${nights} nights</span>
-                    <span>₹${formatNumber(subtotal)}</span>
+            <div class="price-breakdown">
+                <h5 class="mb-3">
+                    <i class="fas fa-rupee-sign text-primary me-2"></i>
+                    Price Breakdown
+                </h5>
+                <div class="pricing-details bg-white rounded-3 p-3">
+                    <div class="price-row">
+                        <span>₹${formatNumber(selectedRoom.price)} × ${nights} nights</span>
+                        <span>₹${formatNumber(subtotal)}</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Taxes & Fees (12% GST)</span>
+                        <span>₹${formatNumber(tax)}</span>
+                    </div>
+                    <div class="price-row total">
+                        <span><strong>Total Amount</strong></span>
+                        <span class="text-primary"><strong>₹${formatNumber(total)}</strong></span>
+                    </div>
                 </div>
-                <div class="price-row">
-                    <span>Taxes (12% GST)</span>
-                    <span>₹${formatNumber(tax)}</span>
-                </div>
-                <div class="price-row total-row">
-                    <span><strong>Total Amount</strong></span>
-                    <span><strong>₹${formatNumber(total)}</strong></span>
+                
+                <div class="payment-note mt-3 p-3 bg-light rounded-3">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Payment can be made at the property. Free cancellation up to 24 hours before check-in.
+                    </small>
                 </div>
             </div>
         `;
@@ -650,28 +701,6 @@ function generateMockBookingId() {
 function printBooking(bookingId) {
     showNotification('Print functionality would open here in production', 'info');
     // In real implementation, this would open a print dialog
-}
-
-function setupFormValidation() {
-    // Add real-time validation for form fields
-    const emailInput = document.getElementById('guestEmail');
-    if (emailInput) {
-        emailInput.addEventListener('blur', function() {
-            if (this.value && !isValidEmail(this.value)) {
-                this.classList.add('is-invalid');
-            } else {
-                this.classList.remove('is-invalid');
-            }
-        });
-    }
-    
-    const phoneInput = document.getElementById('guestPhone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', function() {
-            // Remove non-numeric characters except + and -
-            this.value = this.value.replace(/[^\d+\-\s()]/g, '');
-        });
-    }
 }
 
 console.log('📜 Booking page JavaScript loaded successfully');
