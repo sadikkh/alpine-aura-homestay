@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Rooms | Alpine Aura Homestay - Luxury Mountain Accommodation</title>
+    <meta name="description" content="Discover our comfortable rooms with stunning Himalayan views. Choose from Mountain View Deluxe, Cozy Garden Room, or spacious Family Suite at Alpine Aura Homestay.">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(29, 78, 216, 0.9)),
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&q=80') center/cover;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+        
+        .search-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .amenity-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .amenity-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .amenity-icon {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-mountain me-2"></i>
+                <span>Alpine Aura</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="kalimpong.html">Kalimpong</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="tel:+91XXXXXXXXXX">
+                            <i class="fas fa-phone"></i> Call Us
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary ms-2 px-3" href="booking.html">
+                            <i class="fas fa-calendar-check"></i> Book Now
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="hero-title text-white">Our Comfortable Rooms</h1>
+                    <p class="hero-subtitle text-light">
+                        Choose from our carefully designed accommodations, each offering unique views 
+                        and authentic Himalayan hospitality
+                    </p>
+                    <div class="hero-badge">
+                        <i class="fab fa-aws"></i>
+                        <span>Real-time Availability via AWS DynamoDB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Room Search -->
+    <section class="room-search py-4 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="search-card card shadow">
+                        <div class="card-body p-4">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-search"></i> Find Your Perfect Room
+                            </h5>
+                            <form id="roomSearchForm" class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">Check-in</label>
+                                    <input type="date" class="form-control" id="searchCheckin" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Check-out</label>
+                                    <input type="date" class="form-control" id="searchCheckout" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Adults</label>
+                                    <select class="form-select" id="searchAdults">
+                                        <option value="1">1 Adult</option>
+                                        <option value="2" selected>2 Adults</option>
+                                        <option value="3">3 Adults</option>
+                                        <option value="4">4 Adults</option>
+                                        <option value="5">5 Adults</option>
+                                        <option value="6">6 Adults</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Children</label>
+                                    <select class="form-select" id="searchChildren">
+                                        <option value="0" selected>0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-search"></i> Search
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rooms Grid -->
+    <section class="rooms-grid py-5">
+        <div class="container">
+            <!-- Search Results Info -->
+            <div id="searchResultsInfo" class="row mb-4 d-none">
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span id="searchInfoText">Showing available rooms</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rooms Container -->
+            <div class="row" id="roomsContainer">
+                <!-- Loading placeholder -->
+                <div class="col-12 text-center">
+                    <div class="loading-rooms py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3">Loading our beautiful rooms...</p>
+                        <small class="text-muted">Fetching data from AWS DynamoDB...</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Room Amenities -->
+    <section class="amenities-section py-5 bg-light">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-lg-8 mx-auto">
+                    <h2 class="section-title">Included in All Rooms</h2>
+                    <p class="section-subtitle">Every room comes with these premium amenities and services</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="amenity-card text-center h-100">
+                        <div class="amenity-icon">
+                            <i class="fas fa-wifi fa-2x"></i>
+                        </div>
+                        <h5>High-Speed WiFi</h5>
+                        <p>Complimentary high-speed internet access throughout your stay</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="amenity-card text-center h-100">
+                        <div class="amenity-icon">
+                            <i class="fas fa-snowflake fa-2x"></i>
+                        </div>
+                        <h5>Climate Control</h5>
+                        <p>Individual temperature control for your comfort in all seasons</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="amenity-card text-center h-100">
+                        <div class="amenity-icon">
+                            <i class="fas fa-concierge-bell fa-2x"></i>
+                        </div>
+                        <h5>Room Service</h5>
+                        <p>24/7 room service with local and international cuisine options</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="amenity-card text-center h-100">
+                        <div class="amenity-icon">
+                            <i class="fas fa-broom fa-2x"></i>
+                        </div>
+                        <h5>Daily Housekeeping</h5>
+                        <p>Professional housekeeping service to keep your room spotless</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking CTA -->
+    <section class="cta-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="text-white mb-3">Ready to Book Your Mountain Retreat?</h2>
+                    <p class="text-light mb-4">Experience the best of Kalimpong hospitality with stunning Himalayan views</p>
+                    <div class="cta-buttons">
+                        <a href="booking.html" class="btn btn-light btn-lg me-3">
+                            <i class="fas fa-calendar-check"></i> Book Now
+                        </a>
+                        <a href="contact.html" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-phone"></i> Call Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-brand">
+                        <h5>
+                            <i class="fas fa-mountain me-2"></i>
+                            Alpine Aura Homestay
+                        </h5>
+                        <p>Experience authentic Himalayan hospitality in the heart of beautiful Kalimpong.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6>Quick Links</h6>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="kalimpong.html">Kalimpong</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6>Room Types</h6>
+                    <ul class="footer-links">
+                        <li><a href="#mountain-view">Mountain View Deluxe</a></li>
+                        <li><a href="#garden-room">Cozy Garden Room</a></li>
+                        <li><a href="#family-suite">Family Suite</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 mb-4">
+                    <h6>Contact Information</h6>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Kalimpong, West Bengal, India</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+91-XXXXX-XXXXX</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@alpineaura.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Alpine Aura Homestay. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="footer-links-inline">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Sitemap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/rooms.js"></script>
+</body>
+</html>
