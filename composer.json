@@ -1,84 +1,14 @@
 {
     "name": "alpine-aura/homestay-kalimpong",
-    "description": "Modern homestay booking website for Kalimpong with AWS DynamoDB integration and real-time availability",
+    "description": "Modern homestay booking website for Kalimpong with AWS DynamoDB integration",
     "type": "project",
-    "keywords": [
-        "homestay", 
-        "booking", 
-        "kalimpong", 
-        "dynamodb", 
-        "aws", 
-        "php", 
-        "travel", 
-        "hospitality",
-        "himalayan",
-        "mountain-resort"
-    ],
-    "homepage": "https://alpineaura.com",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Your Name",
-            "email": "your.email@example.com",
-            "homepage": "https://alpineaura.com",
-            "role": "Full Stack Developer"
-        }
-    ],
     "require": {
         "php": ">=8.0",
-        "aws/aws-sdk-php": "^3.280",
-        "vlucas/phpdotenv": "^5.5",
-        "monolog/monolog": "^3.4",
-        "guzzlehttp/guzzle": "^7.8"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^10.0",
-        "squizlabs/php_codesniffer": "^3.7",
-        "phpstan/phpstan": "^1.10"
-    },
-    "autoload": {
-        "psr-4": {
-            "AlpineAura\\": "src/"
-        },
-        "files": [
-            "php/helpers.php"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "AlpineAura\\Tests\\": "tests/"
-        }
+        "aws/aws-sdk-php": "^3.280"
     },
     "scripts": {
-        "test": "phpunit",
-        "setup": "php setup/create-tables.php",
-        "serve": "php -S localhost:8000 -t public/",
-        "check": "phpcs --standard=PSR12 php/",
-        "fix": "phpcbf --standard=PSR12 php/",
-        "analyze": "phpstan analyse php/ --level=5",
-        "test-aws": "php -r \"require 'vendor/autoload.php'; require 'php/aws-config.php'; echo 'AWS Connection: ' . (testAWSConnection() ? 'Success' : 'Failed') . PHP_EOL;\"",
-        "install-dev": "composer install --dev",
-        "create-tables": "php setup/create-tables.php",
-        "seed-data": "php setup/seed-sample-data.php"
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "sort-packages": true,
-        "allow-plugins": {
-            "php-http/discovery": true
-        }
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true,
-    "support": {
-        "issues": "https://github.com/yourusername/alpine-aura-homestay/issues",
-        "source": "https://github.com/yourusername/alpine-aura-homestay",
-        "docs": "https://github.com/yourusername/alpine-aura-homestay/blob/main/docs/"
-    },
-    "funding": [
-        {
-            "type": "github",
-            "url": "https://github.com/sponsors/yourusername"
-        }
-    ]
+        "serve": "php -S localhost:8000",
+        "test-api": "curl http://localhost:8000/php/booking.php?action=test_connection"
+    }
 }
