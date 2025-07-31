@@ -24,6 +24,8 @@ if (file_exists($configFile)) {
     // Use mock data for demonstration when AWS is not configured
     $useMockData = true;
 }
+// Include AWS integration functions
+require_once _DIR_ . '/aws-functions.php';
 
 // Get request parameters
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
