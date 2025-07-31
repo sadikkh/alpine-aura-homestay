@@ -4,23 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alpine Aura Homestay | Authentic Himalayan Experience in Kalimpong</title>
-    <meta name="description" content="Experience breathtaking Himalayan views at Alpine Aura Homestay in Kalimpong. Book your mountain retreat with modern comfort, traditional hospitality, and AWS-powered booking system.">
-    <meta name="keywords" content="Kalimpong homestay, Himalayan accommodation, mountain views, booking, travel, West Bengal, DynamoDB">
-    
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Alpine Aura Homestay - Kalimpong">
-    <meta property="og:description" content="Authentic Himalayan experience with modern booking system">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=630&fit=crop">
-    <meta property="og:url" content="https://alpineaura.com">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏔️</text></svg>">
+    <meta name="description" content="Experience breathtaking Himalayan views at Alpine Aura Homestay in Kalimpong. Book your mountain retreat with modern comfort and AWS-powered booking system.">
     
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
@@ -48,27 +36,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#home">Home</a>
+                        <a class="nav-link active" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="rooms.html">Rooms</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="kalimpong.html">Kalimpong</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="gallery.html">Gallery</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contact.html">Contact</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="tel:+91XXXXXXXXXX">
-                            <i class="fas fa-phone"></i> Call Us
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link btn btn-primary ms-2 px-3" href="booking.html">
                             <i class="fas fa-calendar-check"></i> Book Now
@@ -81,9 +58,7 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero-section">
-        <div class="hero-video-bg">
-            <div class="hero-overlay"></div>
-        </div>
+        <div class="hero-overlay"></div>
         <div class="container">
             <div class="row align-items-center min-vh-100">
                 <div class="col-lg-7">
@@ -147,7 +122,7 @@
                 </div>
                 
                 <div class="col-lg-5">
-                    <!-- Advanced Booking Widget -->
+                    <!-- Booking Widget -->
                     <div id="booking-widget" class="booking-widget">
                         <div class="widget-header">
                             <h3>
@@ -162,25 +137,18 @@
                         </div>
                         
                         <form id="availabilityForm" class="booking-form">
-                            <div class="alert alert-info booking-alert d-none" id="bookingAlert">
-                                <i class="fas fa-info-circle"></i>
-                                <span id="alertMessage"></span>
-                            </div>
-                            
                             <div class="row">
                                 <div class="col-6">
                                     <label for="checkin" class="form-label">
                                         <i class="fas fa-calendar-alt"></i> Check-in
                                     </label>
                                     <input type="date" class="form-control" id="checkin" required>
-                                    <small class="form-text">Select arrival date</small>
                                 </div>
                                 <div class="col-6">
                                     <label for="checkout" class="form-label">
                                         <i class="fas fa-calendar-alt"></i> Check-out
                                     </label>
                                     <input type="date" class="form-control" id="checkout" required>
-                                    <small class="form-text">Select departure date</small>
                                 </div>
                             </div>
                             
@@ -194,8 +162,6 @@
                                         <option value="2" selected>2 Adults</option>
                                         <option value="3">3 Adults</option>
                                         <option value="4">4 Adults</option>
-                                        <option value="5">5 Adults</option>
-                                        <option value="6">6 Adults</option>
                                     </select>
                                 </div>
                                 <div class="col-6">
@@ -203,11 +169,10 @@
                                         <i class="fas fa-child"></i> Children
                                     </label>
                                     <select class="form-select" id="children">
-                                        <option value="0" selected>0 Children</option>
-                                        <option value="1">1 Child</option>
-                                        <option value="2">2 Children</option>
-                                        <option value="3">3 Children</option>
-                                        <option value="4">4 Children</option>
+                                        <option value="0" selected>0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
                                     </select>
                                 </div>
                             </div>
@@ -236,7 +201,7 @@
                                 </div>
                                 <div class="feature-badge">
                                     <i class="fas fa-tags"></i>
-                                    Best Price Guarantee
+                                    Best Price
                                 </div>
                                 <div class="feature-badge">
                                     <i class="fas fa-clock"></i>
@@ -244,49 +209,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Scroll Down Indicator -->
-        <div class="scroll-indicator">
-            <a href="#features" class="scroll-link">
-                <i class="fas fa-chevron-down"></i>
-            </a>
-        </div>
-    </section>
-
-    <!-- Quick Stats -->
-    <section class="stats-section py-4 bg-primary">
-        <div class="container">
-            <div class="row text-center text-white">
-                <div class="col-md-3 col-6 mb-3 mb-md-0">
-                    <div class="stat-card">
-                        <i class="fas fa-bed fa-2x mb-2"></i>
-                        <h4 class="stat-number" data-count="3">0</h4>
-                        <p class="stat-label">Room Types</p>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6 mb-3 mb-md-0">
-                    <div class="stat-card">
-                        <i class="fas fa-users fa-2x mb-2"></i>
-                        <h4 class="stat-number" data-count="500">0</h4>
-                        <p class="stat-label">Happy Guests</p>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="stat-card">
-                        <i class="fas fa-star fa-2x mb-2"></i>
-                        <h4 class="stat-number" data-count="4.9">0</h4>
-                        <p class="stat-label">★ Average Rating</p>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="stat-card">
-                        <i class="fas fa-calendar-check fa-2x mb-2"></i>
-                        <h4 class="stat-number" data-count="98">0</h4>
-                        <p class="stat-label">% Satisfaction</p>
                     </div>
                 </div>
             </div>
@@ -300,8 +222,7 @@
                 <div class="col-lg-8 mx-auto text-center mb-5">
                     <h2 class="section-title">Why Choose Alpine Aura?</h2>
                     <p class="section-subtitle">
-                        Experience the perfect blend of comfort, tradition, and natural beauty 
-                        with modern technology-powered convenience
+                        Experience the perfect blend of comfort, tradition, and natural beauty
                     </p>
                 </div>
             </div>
@@ -313,12 +234,7 @@
                             <i class="fas fa-mountain fa-3x"></i>
                         </div>
                         <h5>Breathtaking Views</h5>
-                        <p>Wake up to stunning sunrise views of Mount Kanchenjunga and the majestic Himalayan range from your room window.</p>
-                        <ul class="feature-list text-start">
-                            <li>Panoramic mountain vistas</li>
-                            <li>Sunrise viewing points</li>
-                            <li>Photography opportunities</li>
-                        </ul>
+                        <p>Wake up to stunning sunrise views of Mount Kanchenjunga and the majestic Himalayan range.</p>
                     </div>
                 </div>
                 
@@ -328,12 +244,7 @@
                             <i class="fas fa-home fa-3x"></i>
                         </div>
                         <h5>Authentic Experience</h5>
-                        <p>Traditional homestay hospitality with modern amenities. Feel like family while enjoying contemporary comforts.</p>
-                        <ul class="feature-list text-start">
-                            <li>Warm local hospitality</li>
-                            <li>Cultural immersion</li>
-                            <li>Modern amenities</li>
-                        </ul>
+                        <p>Traditional homestay hospitality with modern amenities and warm local culture.</p>
                     </div>
                 </div>
                 
@@ -343,12 +254,7 @@
                             <i class="fas fa-map-marker-alt fa-3x"></i>
                         </div>
                         <h5>Prime Location</h5>
-                        <p>Walking distance to Deolo Hill, Durpin Monastery, and all major attractions. Perfect base for exploration.</p>
-                        <ul class="feature-list text-start">
-                            <li>Central location</li>
-                            <li>Easy accessibility</li>
-                            <li>Tourist attractions nearby</li>
-                        </ul>
+                        <p>Walking distance to Deolo Hill, Durpin Monastery, and all major attractions.</p>
                     </div>
                 </div>
                 
@@ -358,37 +264,28 @@
                             <i class="fab fa-aws fa-3x"></i>
                         </div>
                         <h5>Modern Technology</h5>
-                        <p>AWS DynamoDB-powered booking system ensures instant confirmations, real-time availability, and secure transactions.</p>
-                        <ul class="feature-list text-start">
-                            <li>Real-time booking system</li>
-                            <li>Instant confirmations</li>
-                            <li>Secure data handling</li>
-                        </ul>
+                        <p>AWS DynamoDB-powered booking system for instant confirmations and secure transactions.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Rooms Preview Section -->
+    <!-- Rooms Preview -->
     <section class="rooms-preview py-5 bg-light">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 mx-auto text-center mb-5">
                     <h2 class="section-title">Our Comfortable Rooms</h2>
-                    <p class="section-subtitle">
-                        Choose from our carefully designed accommodations, each offering unique views and authentic experiences
-                    </p>
+                    <p class="section-subtitle">Choose from our carefully designed accommodations</p>
                 </div>
             </div>
             
             <div class="row" id="roomsPreview">
-                <!-- Loading placeholder -->
+                <!-- Rooms will be loaded here by JavaScript -->
                 <div class="col-12 text-center">
                     <div class="loading-rooms">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
+                        <div class="spinner-border text-primary" role="status"></div>
                         <p class="mt-2">Loading our beautiful rooms...</p>
                     </div>
                 </div>
@@ -396,3 +293,78 @@
             
             <div class="row mt-4">
                 <div class="col-12 text-center">
+                    <a href="rooms.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-eye"></i> View All Rooms
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-brand">
+                        <h5>
+                            <i class="fas fa-mountain me-2"></i>
+                            Alpine Aura Homestay
+                        </h5>
+                        <p>Experience authentic Himalayan hospitality in beautiful Kalimpong.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h6>Quick Links</h6>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="booking.html">Book Now</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h6>Contact</h6>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Kalimpong, West Bengal, India</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+91-XXXXX-XXXXX</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@alpineaura.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Alpine Aura Homestay. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <small>Powered by AWS DynamoDB</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
